@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, ChevronRight, ChevronLeft } from 'lucide-react';
 
@@ -11,7 +11,7 @@ interface OnboardingTourProps {
 
 interface TourStep {
   title: string;
-  content: JSX.Element;
+  content: React.ReactNode;
   target: string;
 }
 
