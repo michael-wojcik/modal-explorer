@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { PianoKey } from './PianoKey';
 import { useStore } from '@/lib/store';
 import { generateScale } from '@/lib/theory-engine';
@@ -195,7 +195,7 @@ export function PianoKeyboard({ startOctave = 3, numOctaves = 2 }: PianoKeyboard
                 isCharacteristic={isCharacteristicNote(note)}
                 scaleColor={mode.color}
                 keyboardLabel={getKeyboardLabel(note)}
-                onClick={(e: any) => handleNoteClick(note, e)}
+                onClick={(e: React.MouseEvent) => handleNoteClick(note, e)}
                 onMouseEnter={() => setHoveredNote(note.midiNumber)}
                 onMouseLeave={() => setHoveredNote(null)}
               />
@@ -217,7 +217,7 @@ export function PianoKeyboard({ startOctave = 3, numOctaves = 2 }: PianoKeyboard
                 isCharacteristic={isCharacteristicNote(note)}
                 scaleColor={mode.color}
                 keyboardLabel={getKeyboardLabel(note)}
-                onClick={(e: any) => handleNoteClick(note, e)}
+                onClick={(e: React.MouseEvent) => handleNoteClick(note, e)}
                 onMouseEnter={() => setHoveredNote(note.midiNumber)}
                 onMouseLeave={() => setHoveredNote(null)}
               />

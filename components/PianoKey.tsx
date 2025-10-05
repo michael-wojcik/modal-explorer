@@ -1,5 +1,6 @@
 'use client';
 
+import React from 'react';
 import { motion } from 'framer-motion';
 import type { Note } from '@/lib/types';
 import { formatNote } from '@/lib/notes';
@@ -14,7 +15,7 @@ interface PianoKeyProps {
   isCharacteristic: boolean;
   scaleColor: string;
   keyboardLabel?: string | null;
-  onClick: () => void;
+  onClick: (e: React.MouseEvent) => void;
   onMouseEnter: () => void;
   onMouseLeave: () => void;
 }
