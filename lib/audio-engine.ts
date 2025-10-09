@@ -172,7 +172,8 @@ export class AudioEngine {
     }
 
     return new Promise((resolve) => {
-      const part = new Tone.Part((time, chord) => {
+      const part = new Tone.Part((time, value) => {
+        const chord = value as ChordInstance;
         const noteStrings = chord.notes.map(toToneNotation);
         this.synth!.triggerAttackRelease(noteStrings, '1n', time);
       }, chords.map((chord, index) => [index * (60 / tempo), chord]));
@@ -244,7 +245,6 @@ export class AudioEngine {
     }).toDestination();
 
     const hihat = new Tone.MetalSynth({
-      frequency: 200,
       envelope: {
         attack: 0.001,
         decay: 0.1,
@@ -259,13 +259,15 @@ export class AudioEngine {
     Tone.getTransport().bpm.value = tempo;
 
     // Chord progression pattern
-    const chordPart = new Tone.Part((time, chord) => {
+    const chordPart = new Tone.Part((time, value) => {
+      const chord = value as ChordInstance;
       const noteStrings = chord.notes.map(toToneNotation);
       this.synth!.triggerAttackRelease(noteStrings, '2n', time);
     }, this.generateChordPattern(chords, duration));
 
     // Bass pattern
-    const bassPart = new Tone.Part((time, note) => {
+    const bassPart = new Tone.Part((time, value) => {
+      const note = value as Note;
       bass.triggerAttackRelease(toToneNotation(note), '8n', time);
     }, this.generateBassPattern(chords, duration));
 
