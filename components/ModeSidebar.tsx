@@ -22,9 +22,9 @@ export function ModeSidebar() {
   };
 
   return (
-    <div className="w-80 bg-gray-900 border-r border-gray-700 flex flex-col overflow-y-auto">
+    <div className="w-80 h-full bg-gray-900 border-r border-gray-700 flex flex-col">
       {/* Header */}
-      <div className="p-[0.5rem] border-b border-gray-700">
+      <div className="p-[0.5rem] border-b border-gray-700 flex-shrink-0">
         <div className="flex items-center gap-3 mb-2">
           <Music className="w-6 h-6 text-blue-400" />
           <h2 className="text-xl font-bold text-white">Diatonic Modes</h2>
@@ -35,7 +35,7 @@ export function ModeSidebar() {
       </div>
 
       {/* Sort Order Toggle */}
-      <div className="p-[0.5rem] border-b border-gray-700 bg-gray-800/30">
+      <div className="p-[0.5rem] border-b border-gray-700 bg-gray-800/30 flex-shrink-0">
         <div className="flex items-center gap-2 rounded-lg bg-gray-800 p-1.5">
           <button
             onClick={() => setModeSortOrder('traditional')}
@@ -69,7 +69,7 @@ export function ModeSidebar() {
       </div>
 
       {/* Brightness Scale */}
-      <div className="p-[0.5rem] border-b border-gray-700 bg-gray-800/50">
+      <div className="p-[0.5rem] border-b border-gray-700 bg-gray-800/50 flex-shrink-0">
         <div className="flex items-center gap-2 mb-2">
           <Lightbulb className="w-4 h-4 text-yellow-400" />
           <span className="text-xs font-medium text-gray-300">Brightness Scale</span>
@@ -81,8 +81,8 @@ export function ModeSidebar() {
         <div className="h-2 bg-gradient-to-r from-purple-900 via-gray-600 to-cyan-400 rounded-full mt-1" />
       </div>
 
-      {/* Mode List */}
-      <div className="flex-1 p-[0.5rem] space-y-2">
+      {/* Mode List - Scrollable */}
+      <div className="flex-1 overflow-y-auto p-[0.5rem] space-y-2">
         {modes.map((mode, index) => {
           const isSelected = currentMode === mode.name;
 
@@ -175,7 +175,7 @@ export function ModeSidebar() {
       </div>
 
       {/* Legend */}
-      <div className="p-[0.5rem] border-t border-gray-700 bg-gray-800/50">
+      <div className="p-[0.5rem] border-t border-gray-700 bg-gray-800/50 flex-shrink-0">
         <h4 className="text-xs font-medium text-gray-400 mb-2">Legend</h4>
         <div className="space-y-1 text-xs text-gray-500">
           <div className="flex items-center gap-2">
