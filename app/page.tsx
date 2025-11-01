@@ -30,7 +30,7 @@ export default function Home() {
       <OnboardingTour run={runTour} onComplete={() => setRunTour(false)} />
 
       {/* Sidebar */}
-      <div className="mode-sidebar">
+      <div className="mode-sidebar h-full">
         <ModeSidebar />
       </div>
 
