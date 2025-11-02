@@ -223,11 +223,11 @@ export function PianoKeyboard({ startOctave = 3, numOctaves = 2 }: PianoKeyboard
   }, [allNotes.length]); // Re-center when octave/notes change
 
   return (
-    <div ref={swipeRef} className="relative w-full overflow-x-auto py-8 -mx-4 px-4 scrollbar-hide flex justify-center">
+    <div ref={swipeRef} className="relative w-full overflow-x-auto py-8 -mx-4 px-4 scrollbar-hide">
       <svg
         width={totalWidth}
         height={totalHeight + 20}
-        className="drop-shadow-lg"
+        className="drop-shadow-lg mx-auto block"
       >
         {/* White keys */}
         <g>
