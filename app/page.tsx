@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Menu, X } from 'lucide-react';
+import { Menu } from 'lucide-react';
 import { ModeSidebar } from '@/components/ModeSidebar';
 import { TransportControls } from '@/components/TransportControls';
 import { PianoKeyboard } from '@/components/PianoKeyboard';
@@ -33,14 +33,14 @@ export default function Home() {
       {/* Onboarding Tour */}
       <OnboardingTour run={runTour} onComplete={() => setRunTour(false)} />
 
-      {/* Mobile menu button */}
-      {isMobile && (
+      {/* Mobile menu button - only show when sidebar is closed */}
+      {isMobile && !sidebarOpen && (
         <button
-          onClick={() => setSidebarOpen(!sidebarOpen)}
+          onClick={() => setSidebarOpen(true)}
           className="fixed top-4 left-4 z-50 p-2 bg-gray-800 hover:bg-gray-700 rounded-lg shadow-lg transition-colors"
-          aria-label="Toggle menu"
+          aria-label="Open menu"
         >
-          {sidebarOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+          <Menu className="w-6 h-6" />
         </button>
       )}
 
