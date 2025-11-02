@@ -233,15 +233,21 @@ export default function Home() {
         </footer>
       </div>
 
-      {/* Keyboard Controls - Floating Overlays */}
-      <KeyboardIndicator />
-      <KeyboardOverlay />
+      {/* Keyboard Controls - Desktop only (hidden on mobile) */}
+      {!isMobile && (
+        <>
+          <KeyboardIndicator />
+          <KeyboardOverlay />
+        </>
+      )}
 
       {/* Visual Feedback Overlays */}
       <VisualFeedbackOverlay />
       <SustainPedalEffect />
       <NoteTrails />
-      <KeyboardShortcutsHint />
+
+      {/* Keyboard Shortcuts Hint - Desktop only */}
+      {!isMobile && <KeyboardShortcutsHint />}
     </div>
   );
 }
