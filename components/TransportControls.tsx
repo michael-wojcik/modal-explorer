@@ -1,8 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { motion } from 'framer-motion';
-import { Play, Pause, RotateCcw, Music2, Volume2, Keyboard } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Play, Pause, RotateCcw, Music2, Volume2, Keyboard, ChevronDown, ChevronUp } from 'lucide-react';
 import { useStore } from '@/lib/store';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { NOTE_NAMES } from '@/lib/notes';
@@ -11,6 +11,7 @@ import { getAudioEngine } from '@/lib/audio-engine';
 
 export function TransportControls() {
   const isMobile = useIsMobile();
+  const [isExpanded, setIsExpanded] = useState(false);
   const {
     currentMode,
     currentRoot,
@@ -90,9 +91,43 @@ export function TransportControls() {
   };
 
   return (
-    <div className="bg-gray-800 border-b border-gray-700 p-1.5 md:p-4">
+    <div className="bg-gray-800 border-b border-gray-700">
       <div className="max-w-7xl mx-auto">
-        <div className="flex flex-col md:flex-row md:flex-wrap items-stretch md:items-center gap-1.5 md:gap-4">
+        {/* Mobile: Collapsible header */}
+        {isMobile && (
+          <button
+            onClick={() => setIsExpanded(!isExpanded)}
+            className="w-full flex items-center justify-between p-3 hover:bg-gray-700/50 transition-colors"
+          >
+            <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2">
+                <Music2 className="w-4 h-4 text-blue-400" />
+                <span className="text-sm font-medium">Controls</span>
+              </div>
+              <div className="text-xs text-gray-400">
+                {currentRoot} {currentMode} • Octave {currentOctave}
+              </div>
+            </div>
+            {isExpanded ? (
+              <ChevronUp className="w-5 h-5 text-gray-400" />
+            ) : (
+              <ChevronDown className="w-5 h-5 text-gray-400" />
+            )}
+          </button>
+        )}
+
+        {/* Controls content - collapsible on mobile, always visible on desktop */}
+        <AnimatePresence initial={false}>
+          {(!isMobile || isExpanded) && (
+            <motion.div
+              initial={isMobile ? { height: 0, opacity: 0 } : false}
+              animate={{ height: 'auto', opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.2, ease: 'easeInOut' }}
+              className="overflow-hidden"
+            >
+              <div className="p-1.5 md:p-4">
+                <div className="flex flex-col md:flex-row md:flex-wrap items-stretch md:items-center gap-1.5 md:gap-4">
           {/* Playback Controls - Full width on mobile, auto on desktop */}
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-1.5 w-full md:w-auto">
             <button
@@ -237,7 +272,11 @@ export function TransportControls() {
               <span className="text-xs md:text-sm text-white w-10 md:w-12 text-right">{volume}db</span>
             </div>
           </div>
-        </div>
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </div>
   );
