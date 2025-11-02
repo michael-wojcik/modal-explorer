@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useMemo, useCallback } from 'react';
+import React, { useEffect, useLayoutEffect, useMemo, useCallback } from 'react';
 import { PianoKey } from './PianoKey';
 import { useStore } from '@/lib/store';
 import { generateScale } from '@/lib/theory-engine';
@@ -214,14 +214,11 @@ export function PianoKeyboard({ startOctave = 3, numOctaves = 2 }: PianoKeyboard
   const totalHeight = whiteKeyHeight;
 
   // Center the piano keyboard horizontally on initial load
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (swipeRef.current) {
       const container = swipeRef.current;
-      // Small delay to ensure SVG is fully rendered before calculating scroll position
-      setTimeout(() => {
-        const scrollCenter = (container.scrollWidth - container.clientWidth) / 2;
-        container.scrollLeft = scrollCenter;
-      }, 0);
+      const scrollCenter = (container.scrollWidth - container.clientWidth) / 2;
+      container.scrollLeft = scrollCenter;
     }
   }, [allNotes.length, totalWidth]); // Re-center when octave/notes change or width changes
 
