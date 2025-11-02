@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Play, Pause, RotateCcw, Music2, Volume2, Keyboard, ChevronDown, ChevronUp } from 'lucide-react';
 import { useStore } from '@/lib/store';
@@ -32,7 +32,7 @@ export function TransportControls() {
   const [playDirection, setPlayDirection] = useState<'ascending' | 'descending' | 'both'>('ascending');
   const audioEngine = getAudioEngine();
 
-  const handlePlayScale = async () => {
+  const handlePlayScale = useCallback(async () => {
     if (!audioEngine.initialized) {
       await audioEngine.initialize();
     }
@@ -50,9 +50,9 @@ export function TransportControls() {
     } finally {
       setIsPlaying(false);
     }
-  };
+  }, [audioEngine, currentRoot, currentMode, currentOctave, tempo, playDirection, setIsPlaying]);
 
-  const handlePlayChords = async () => {
+  const handlePlayChords = useCallback(async () => {
     if (!audioEngine.initialized) {
       await audioEngine.initialize();
     }
@@ -82,13 +82,13 @@ export function TransportControls() {
     } finally {
       setIsPlaying(false);
     }
-  };
+  }, [audioEngine, currentRoot, currentMode, currentOctave, tempo, setIsPlaying, setPlayingProgressionIndex]);
 
-  const handleStop = () => {
+  const handleStop = useCallback(() => {
     audioEngine.stopAll();
     setIsPlaying(false);
     setPlayingProgressionIndex(null);
-  };
+  }, [audioEngine, setIsPlaying, setPlayingProgressionIndex]);
 
   return (
     <div className="bg-gray-800 border-b border-gray-700">
