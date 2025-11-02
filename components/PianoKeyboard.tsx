@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useCallback } from 'react';
 import { PianoKey } from './PianoKey';
 import { useStore } from '@/lib/store';
 import { generateScale } from '@/lib/theory-engine';
@@ -153,7 +153,7 @@ export function PianoKeyboard({ startOctave = 3, numOctaves = 2 }: PianoKeyboard
   };
 
   // Handle note click (supports both mouse and touch via pointer events)
-  const handleNoteClick = (note: Note, event?: React.PointerEvent) => {
+  const handleNoteClick = useCallback((note: Note, event?: React.PointerEvent) => {
     if (!audioEngine.initialized) return;
 
     // Haptic feedback for touch interactions
@@ -175,7 +175,7 @@ export function PianoKeyboard({ startOctave = 3, numOctaves = 2 }: PianoKeyboard
     setTimeout(() => {
       removeActiveNote(note.midiNumber);
     }, 500);
-  };
+  }, [audioEngine, addActiveNote, removeActiveNote, addNoteTrail]);
 
   // Get scale degree label for a piano note (if in current scale)
   const getKeyboardLabel = (note: Note): string | null => {
