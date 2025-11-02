@@ -174,12 +174,11 @@ export function PianoKeyboard({ startOctave = 3, numOctaves = 2 }: PianoKeyboard
   const totalHeight = 160;
 
   return (
-    <div className="relative w-full flex justify-center py-8">
+    <div className="relative w-full overflow-x-auto py-8 -mx-4 px-4 scrollbar-hide">
       <svg
         width={totalWidth}
         height={totalHeight + 20}
-        className="drop-shadow-lg"
-        style={{ maxWidth: '100%' }}
+        className="drop-shadow-lg mx-auto"
       >
         {/* White keys */}
         <g>
@@ -195,7 +194,7 @@ export function PianoKeyboard({ startOctave = 3, numOctaves = 2 }: PianoKeyboard
                 isCharacteristic={isCharacteristicNote(note)}
                 scaleColor={mode.color}
                 keyboardLabel={getKeyboardLabel(note)}
-                onClick={(e: React.MouseEvent) => handleNoteClick(note, e)}
+                onClick={(e: React.PointerEvent) => handleNoteClick(note, e)}
                 onMouseEnter={() => setHoveredNote(note.midiNumber)}
                 onMouseLeave={() => setHoveredNote(null)}
               />
@@ -217,7 +216,7 @@ export function PianoKeyboard({ startOctave = 3, numOctaves = 2 }: PianoKeyboard
                 isCharacteristic={isCharacteristicNote(note)}
                 scaleColor={mode.color}
                 keyboardLabel={getKeyboardLabel(note)}
-                onClick={(e: React.MouseEvent) => handleNoteClick(note, e)}
+                onClick={(e: React.PointerEvent) => handleNoteClick(note, e)}
                 onMouseEnter={() => setHoveredNote(note.midiNumber)}
                 onMouseLeave={() => setHoveredNote(null)}
               />
