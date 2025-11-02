@@ -6,12 +6,15 @@ import { Play } from 'lucide-react';
 import { useStore } from '@/lib/store';
 import { generateDiatonicChords, formatChordName } from '@/lib/theory-engine';
 import { getAudioEngine } from '@/lib/audio-engine';
+import { hapticMedium } from '@/lib/haptics';
+import { useIsMobile } from '@/hooks/useIsMobile';
 import type { ChordInstance } from '@/lib/types';
 
 export function ChordDisplay() {
   const { currentMode, currentRoot, currentOctave, playingProgressionIndex } = useStore();
   const [playingChordIndex, setPlayingChordIndex] = useState<number | null>(null);
   const audioEngine = getAudioEngine();
+  const isMobile = useIsMobile();
 
   const chords = useMemo(() => {
     return generateDiatonicChords(currentRoot, currentMode, currentOctave);
@@ -21,6 +24,9 @@ export function ChordDisplay() {
     if (!audioEngine.initialized) {
       await audioEngine.initialize();
     }
+
+    // Haptic feedback for chord play
+    hapticMedium();
 
     setPlayingChordIndex(index);
     audioEngine.playChord(chord.notes, '2n');
@@ -44,10 +50,10 @@ export function ChordDisplay() {
   };
 
   return (
-    <div className="bg-gray-800 rounded-lg border border-gray-700 p-[0.5rem]">
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="text-lg font-semibold text-white">Diatonic Chords</h3>
-        <div className="flex gap-2 text-xs">
+    <div className="bg-gray-800 rounded-lg border border-gray-700 p-2 md:p-3 lg:p-4">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 md:gap-3 mb-3 md:mb-4">
+        <h3 className="text-base md:text-lg font-semibold text-white">Diatonic Chords</h3>
+        <div className="hidden sm:flex flex-wrap gap-2 text-xs">
           <div className="flex items-center gap-1">
             <div className="w-3 h-3 rounded bg-green-500/50" />
             <span className="text-gray-400">Tonic</span>
@@ -63,7 +69,7 @@ export function ChordDisplay() {
         </div>
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 relative">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 md:gap-3 relative">
         <AnimatePresence mode="popLayout">
           {chords.map((chord, index) => {
             const chordName = formatChordName(chord.root.name, chord.quality);
@@ -75,7 +81,7 @@ export function ChordDisplay() {
                 key={`${chord.root.name}-${index}`}
                 onClick={() => handlePlayChord(chord, index)}
                 className={`
-                  relative p-[0.5rem] rounded-lg border transition-all
+                  relative p-3 md:p-4 rounded-lg border transition-all min-h-[100px] md:min-h-[120px]
                   ${getFunctionColor(chord.function)}
                   ${(isPlaying || isInProgression) ? 'ring-2 ring-white scale-105' : 'hover:scale-102'}
                 `}
@@ -86,18 +92,18 @@ export function ChordDisplay() {
                 whileTap={{ scale: 0.98 }}
               >
                 {/* Roman Numeral */}
-                <div className="text-2xl font-bold mb-1">
+                <div className="text-xl md:text-2xl font-bold mb-1">
                   {chord.romanNumeral}
                 </div>
 
                 {/* Chord Name */}
-                <div className="text-sm font-medium mb-2">
+                <div className="text-xs md:text-sm font-medium mb-1 md:mb-2">
                   {chordName}
                 </div>
 
                 {/* Function */}
                 {chord.function && (
-                  <div className="text-xs opacity-75 capitalize">
+                  <div className="text-xs opacity-75 capitalize hidden md:block">
                     {chord.function}
                   </div>
                 )}
@@ -109,15 +115,15 @@ export function ChordDisplay() {
                       animate={{ scale: [1, 1.2, 1] }}
                       transition={{ repeat: Infinity, duration: 0.6 }}
                     >
-                      <Play className="w-4 h-4 fill-current" />
+                      <Play className="w-3 h-3 md:w-4 md:h-4 fill-current" />
                     </motion.div>
                   ) : (
-                    <Play className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" />
+                    <Play className="w-3 h-3 md:w-4 md:h-4 opacity-0 group-hover:opacity-100 transition-opacity" />
                   )}
                 </div>
 
-                {/* Notes */}
-                <div className="text-xs opacity-60 mt-2">
+                {/* Notes - Hidden on mobile */}
+                <div className="text-xs opacity-60 mt-2 hidden md:block">
                   {chord.notes.map(n => n.name).join(' - ')}
                 </div>
               </motion.button>
@@ -127,11 +133,20 @@ export function ChordDisplay() {
       </div>
 
       {/* Info */}
-      <div className="mt-4 p-[0.5rem] bg-gray-900/50 rounded border border-gray-700">
+      <div className="mt-3 md:mt-4 p-2 md:p-[0.5rem] bg-gray-900/50 rounded border border-gray-700">
         <p className="text-xs text-gray-400">
-          Click any chord to hear it. These are the naturally occurring chords when you harmonize
-          the <span className="text-white font-medium">{currentMode}</span> mode in{' '}
-          <span className="text-white font-medium">{currentRoot}</span>.
+          {isMobile ? (
+            <>
+              Tap any chord to hear it. These are the diatonic chords in{' '}
+              <span className="text-white font-medium">{currentRoot} {currentMode}</span>.
+            </>
+          ) : (
+            <>
+              Click any chord to hear it. These are the naturally occurring chords when you harmonize
+              the <span className="text-white font-medium">{currentMode}</span> mode in{' '}
+              <span className="text-white font-medium">{currentRoot}</span>.
+            </>
+          )}
         </p>
       </div>
     </div>

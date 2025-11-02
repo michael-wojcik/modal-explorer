@@ -4,6 +4,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import type { Note } from '@/lib/types';
 import { formatNote } from '@/lib/notes';
+import { useIsMobile } from '@/hooks/useIsMobile';
 
 interface PianoKeyProps {
   note: Note;
@@ -15,7 +16,7 @@ interface PianoKeyProps {
   isCharacteristic: boolean;
   scaleColor: string;
   keyboardLabel?: string | null;
-  onClick: (e: React.MouseEvent) => void;
+  onClick: (e: React.PointerEvent) => void;
   onMouseEnter: () => void;
   onMouseLeave: () => void;
 }
@@ -60,21 +61,36 @@ export function PianoKey({
     return '#374151';
   };
 
-  // Dimensions
-  const whiteKeyWidth = 40;
-  const whiteKeyHeight = 160;
-  const blackKeyWidth = 24;
-  const blackKeyHeight = 100;
+  // Responsive dimensions - larger keys on mobile for better touch targets
+  const isMobile = useIsMobile();
+  const whiteKeyWidth = isMobile ? 50 : 40;
+  const whiteKeyHeight = isMobile ? 180 : 160;
+  const blackKeyWidth = isMobile ? 30 : 24;
+  const blackKeyHeight = isMobile ? 110 : 100;
 
   const width = isBlack ? blackKeyWidth : whiteKeyWidth;
   const height = isBlack ? blackKeyHeight : whiteKeyHeight;
 
+  // Touch event handlers
+  const handlePointerDown = (e: React.PointerEvent) => {
+    e.preventDefault();
+    onClick(e);
+  };
+
+  const handlePointerEnter = (e: React.PointerEvent) => {
+    // On touch devices, only trigger if pointer is pressed (dragging)
+    if (e.pointerType === 'touch' && e.pressure === 0) {
+      return;
+    }
+    onMouseEnter();
+  };
+
   return (
     <motion.g
-      onClick={onClick}
-      onMouseEnter={onMouseEnter}
-      onMouseLeave={onMouseLeave}
-      style={{ cursor: 'pointer' }}
+      onPointerDown={handlePointerDown}
+      onPointerEnter={handlePointerEnter}
+      onPointerLeave={onMouseLeave}
+      style={{ cursor: 'pointer', touchAction: 'none' }}
       whileHover={{ y: isBlack ? 1 : 2 }}
       whileTap={{ scale: 0.98 }}
       animate={isActive ? { y: [0, -2, 0] } : {}}

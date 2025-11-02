@@ -8,6 +8,8 @@ import { getChromaticScale, createNote } from '@/lib/notes';
 import { getMode } from '@/lib/modes';
 import { getAudioEngine } from '@/lib/audio-engine';
 import { useKeyboardPiano } from '@/hooks/useKeyboardPiano';
+import { useIsMobile } from '@/hooks/useIsMobile';
+import { hapticLight } from '@/lib/haptics';
 import type { Note } from '@/lib/types';
 
 interface PianoKeyboardProps {
@@ -30,6 +32,12 @@ export function PianoKeyboard({ startOctave = 3, numOctaves = 2 }: PianoKeyboard
   } = useStore();
 
   const audioEngine = getAudioEngine();
+  const isMobile = useIsMobile();
+
+  // Responsive key dimensions - larger on mobile for better touch targets
+  const whiteKeyWidth = isMobile ? 50 : 40;
+  const whiteKeyHeight = isMobile ? 180 : 160;
+  const blackKeyWidth = isMobile ? 30 : 24;
 
   // Initialize keyboard controls
   useKeyboardPiano();
@@ -114,13 +122,18 @@ export function PianoKeyboard({ startOctave = 3, numOctaves = 2 }: PianoKeyboard
     return characteristicMidiNumbers.has(note.midiNumber) && isNoteInScale(note);
   };
 
-  // Handle note click
-  const handleNoteClick = (note: Note, event?: React.MouseEvent) => {
+  // Handle note click (supports both mouse and touch via pointer events)
+  const handleNoteClick = (note: Note, event?: React.PointerEvent) => {
     if (!audioEngine.initialized) return;
+
+    // Haptic feedback for touch interactions
+    if (event?.pointerType === 'touch') {
+      hapticLight();
+    }
 
     addActiveNote(note.midiNumber);
 
-    // Track mouse position for animation
+    // Track pointer position for animation
     const sourcePosition = event
       ? { x: event.clientX, y: event.clientY }
       : undefined;
@@ -158,9 +171,6 @@ export function PianoKeyboard({ startOctave = 3, numOctaves = 2 }: PianoKeyboard
 
   // Calculate black key positions
   const getBlackKeyX = (note: Note): number => {
-    const whiteKeyWidth = 40;
-    const blackKeyWidth = 24;
-
     // Find the previous white key
     const whiteKeysBefore = whiteKeys.filter(wk => wk.midiNumber < note.midiNumber).length;
 
@@ -170,21 +180,20 @@ export function PianoKeyboard({ startOctave = 3, numOctaves = 2 }: PianoKeyboard
     return whiteKeysBefore * whiteKeyWidth + blackKeyOffset;
   };
 
-  const totalWidth = whiteKeys.length * 40;
-  const totalHeight = 160;
+  const totalWidth = whiteKeys.length * whiteKeyWidth;
+  const totalHeight = whiteKeyHeight;
 
   return (
-    <div className="relative w-full flex justify-center py-8">
+    <div className="relative w-full overflow-x-auto py-8 -mx-4 px-4 scrollbar-hide">
       <svg
         width={totalWidth}
         height={totalHeight + 20}
-        className="drop-shadow-lg"
-        style={{ maxWidth: '100%' }}
+        className="drop-shadow-lg mx-auto"
       >
         {/* White keys */}
         <g>
           {whiteKeys.map((note, index) => (
-            <g key={note.midiNumber} transform={`translate(${index * 40}, 0)`}>
+            <g key={note.midiNumber} transform={`translate(${index * whiteKeyWidth}, 0)`}>
               <PianoKey
                 note={note}
                 isBlack={false}
@@ -195,7 +204,7 @@ export function PianoKeyboard({ startOctave = 3, numOctaves = 2 }: PianoKeyboard
                 isCharacteristic={isCharacteristicNote(note)}
                 scaleColor={mode.color}
                 keyboardLabel={getKeyboardLabel(note)}
-                onClick={(e: React.MouseEvent) => handleNoteClick(note, e)}
+                onClick={(e: React.PointerEvent) => handleNoteClick(note, e)}
                 onMouseEnter={() => setHoveredNote(note.midiNumber)}
                 onMouseLeave={() => setHoveredNote(null)}
               />
@@ -217,7 +226,7 @@ export function PianoKeyboard({ startOctave = 3, numOctaves = 2 }: PianoKeyboard
                 isCharacteristic={isCharacteristicNote(note)}
                 scaleColor={mode.color}
                 keyboardLabel={getKeyboardLabel(note)}
-                onClick={(e: React.MouseEvent) => handleNoteClick(note, e)}
+                onClick={(e: React.PointerEvent) => handleNoteClick(note, e)}
                 onMouseEnter={() => setHoveredNote(note.midiNumber)}
                 onMouseLeave={() => setHoveredNote(null)}
               />

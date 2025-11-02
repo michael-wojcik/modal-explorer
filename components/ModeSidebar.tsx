@@ -3,12 +3,26 @@
 import { motion } from 'framer-motion';
 import { useStore } from '@/lib/store';
 import { getModesBySortOrder } from '@/lib/modes';
-import { Music, Lightbulb, Hash, Sparkles } from 'lucide-react';
+import { Music, Lightbulb, Hash, Sparkles, X } from 'lucide-react';
+import { useIsMobile } from '@/hooks/useIsMobile';
 import type { ModeName } from '@/lib/types';
 
-export function ModeSidebar() {
+interface ModeSidebarProps {
+  onClose?: () => void;
+}
+
+export function ModeSidebar({ onClose }: ModeSidebarProps) {
   const { currentMode, setMode, modeSortOrder, setModeSortOrder } = useStore();
   const modes = getModesBySortOrder(modeSortOrder);
+  const isMobile = useIsMobile();
+
+  const handleModeSelect = (mode: ModeName) => {
+    setMode(mode);
+    // Close drawer on mobile after selection
+    if (isMobile && onClose) {
+      onClose();
+    }
+  };
 
   // Map mode names to their keyboard shortcuts (Shift+1-7)
   const modeToShortcut: Record<ModeName, number> = {
@@ -22,15 +36,26 @@ export function ModeSidebar() {
   };
 
   return (
-    <div className="w-80 h-full bg-gray-900 border-r border-gray-700 flex flex-col">
+    <div className="w-80 h-full bg-gray-900 border-r border-gray-700 flex flex-col relative">
+      {/* Close button - Mobile only, top-right of drawer */}
+      {isMobile && onClose && (
+        <button
+          onClick={onClose}
+          className="absolute top-2 right-2 z-10 p-2 bg-gray-800 hover:bg-gray-700 rounded-lg transition-colors"
+          aria-label="Close menu"
+        >
+          <X className="w-5 h-5" />
+        </button>
+      )}
+
       {/* Header */}
-      <div className="p-[0.5rem] border-b border-gray-700 flex-shrink-0">
+      <div className={`p-3 border-b border-gray-700 flex-shrink-0 ${isMobile ? 'pr-12' : ''}`}>
         <div className="flex items-center gap-3 mb-2">
           <Music className="w-6 h-6 text-blue-400" />
           <h2 className="text-xl font-bold text-white">Diatonic Modes</h2>
         </div>
         <p className="text-sm text-gray-400">
-          Explore the seven modes of the major scale
+          Explore the seven modes<br />of the major scale
         </p>
       </div>
 
@@ -89,7 +114,7 @@ export function ModeSidebar() {
           return (
             <motion.button
               key={mode.name}
-              onClick={() => setMode(mode.name as ModeName)}
+              onClick={() => handleModeSelect(mode.name as ModeName)}
               className={`
                 w-full text-left p-[0.5rem] rounded-lg border transition-all
                 ${isSelected
