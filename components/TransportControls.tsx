@@ -90,24 +90,24 @@ export function TransportControls() {
   };
 
   return (
-    <div className="bg-gray-800 border-b border-gray-700 p-2 md:p-4">
+    <div className="bg-gray-800 border-b border-gray-700 p-1.5 md:p-4">
       <div className="max-w-7xl mx-auto">
-        <div className="flex flex-col md:flex-row md:flex-wrap items-stretch md:items-center gap-2 md:gap-4">
+        <div className="flex flex-col md:flex-row md:flex-wrap items-stretch md:items-center gap-1.5 md:gap-4">
           {/* Playback Controls - Full width on mobile, auto on desktop */}
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full md:w-auto">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-1.5 w-full md:w-auto">
             <button
               onClick={isPlaying ? handleStop : handlePlayScale}
-              className="flex-1 sm:flex-initial flex items-center justify-center gap-2.5 px-4 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-base min-h-[48px]"
+              className="flex-1 sm:flex-initial flex items-center justify-center gap-2 px-3 py-2 md:px-4 md:py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm md:text-base min-h-[44px]"
               disabled={!audioEngine.initialized && !isPlaying}
             >
               {isPlaying ? (
                 <>
-                  <Pause className="w-5 h-5" />
+                  <Pause className="w-4 h-4 md:w-5 md:h-5" />
                   Stop
                 </>
               ) : (
                 <>
-                  <Play className="w-5 h-5" />
+                  <Play className="w-4 h-4 md:w-5 md:h-5" />
                   Play Scale
                 </>
               )}
@@ -115,10 +115,10 @@ export function TransportControls() {
 
             <button
               onClick={handlePlayChords}
-              className="flex-1 sm:flex-initial flex items-center justify-center gap-2.5 px-4 py-3 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-base min-h-[48px]"
+              className="flex-1 sm:flex-initial flex items-center justify-center gap-2 px-3 py-2 md:px-4 md:py-3 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm md:text-base min-h-[44px]"
               disabled={isPlaying || !audioEngine.initialized}
             >
-              <Music2 className="w-5 h-5" />
+              <Music2 className="w-4 h-4 md:w-5 md:h-5" />
               Play Chords
             </button>
 
@@ -152,14 +152,14 @@ export function TransportControls() {
           </div>
 
           {/* Selectors Group - Grid on mobile, flex on desktop */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 md:flex gap-2 md:gap-4 w-full md:w-auto">
+          <div className="grid grid-cols-2 sm:grid-cols-4 md:flex gap-1.5 md:gap-4 w-full md:w-auto">
             {/* Direction Selector */}
-            <div className="flex flex-col gap-1">
+            <div className="flex flex-col gap-0.5">
               <label className="text-xs text-gray-400">Direction</label>
               <select
                 value={playDirection}
                 onChange={(e) => setPlayDirection(e.target.value as any)}
-                className="px-3 py-2 bg-gray-700 text-white rounded-lg border border-gray-600 focus:border-blue-500 focus:outline-none text-sm min-h-[44px]"
+                className="px-2 py-1.5 md:px-3 md:py-2 bg-gray-700 text-white rounded-lg border border-gray-600 focus:border-blue-500 focus:outline-none text-xs md:text-sm min-h-[44px]"
               >
                 <option value="ascending">Ascending</option>
                 <option value="descending">Descending</option>
@@ -168,12 +168,12 @@ export function TransportControls() {
             </div>
 
             {/* Key Selector */}
-            <div className="flex flex-col gap-1">
+            <div className="flex flex-col gap-0.5">
               <label className="text-xs text-gray-400">Key</label>
               <select
                 value={currentRoot}
                 onChange={(e) => setRoot(e.target.value as any)}
-                className="px-3 py-2 bg-gray-700 text-white rounded-lg border border-gray-600 focus:border-blue-500 focus:outline-none text-sm min-h-[44px]"
+                className="px-2 py-1.5 md:px-3 md:py-2 bg-gray-700 text-white rounded-lg border border-gray-600 focus:border-blue-500 focus:outline-none text-xs md:text-sm min-h-[44px]"
               >
                 {NOTE_NAMES.map(note => (
                   <option key={note} value={note}>{note}</option>
@@ -182,12 +182,12 @@ export function TransportControls() {
             </div>
 
             {/* Octave Selector */}
-            <div className="flex flex-col gap-1">
+            <div className="flex flex-col gap-0.5">
               <label className="text-xs text-gray-400">Octave</label>
               <select
                 value={currentOctave}
                 onChange={(e) => setOctave(parseInt(e.target.value))}
-                className="px-3 py-2 bg-gray-700 text-white rounded-lg border border-gray-600 focus:border-blue-500 focus:outline-none text-sm min-h-[44px]"
+                className="px-2 py-1.5 md:px-3 md:py-2 bg-gray-700 text-white rounded-lg border border-gray-600 focus:border-blue-500 focus:outline-none text-xs md:text-sm min-h-[44px]"
               >
                 {[2, 3, 4, 5, 6].map(oct => (
                   <option key={oct} value={oct}>{oct}</option>
@@ -196,7 +196,7 @@ export function TransportControls() {
             </div>
 
             {/* Tempo Slider */}
-            <div className="flex flex-col gap-1 col-span-2 sm:col-span-1 md:min-w-[200px]">
+            <div className="flex flex-col gap-0.5 col-span-2 sm:col-span-1 md:min-w-[200px]">
               <label className="text-xs text-gray-400 flex items-center gap-1">
                 <RotateCcw className="w-3 h-3" />
                 BPM
@@ -210,13 +210,13 @@ export function TransportControls() {
                   onChange={(e) => setTempo(parseInt(e.target.value))}
                   className="flex-1 accent-blue-600"
                 />
-                <span className="text-sm text-white w-12 text-right">{tempo}</span>
+                <span className="text-xs md:text-sm text-white w-10 md:w-12 text-right">{tempo}</span>
               </div>
             </div>
           </div>
 
           {/* Volume Slider - Full width on mobile */}
-          <div className="flex flex-col gap-1 w-full md:min-w-[150px] md:w-auto">
+          <div className="flex flex-col gap-0.5 w-full md:min-w-[150px] md:w-auto">
             <label className="text-xs text-gray-400 flex items-center gap-1">
               <Volume2 className="w-3 h-3" />
               Volume
@@ -234,7 +234,7 @@ export function TransportControls() {
                 }}
                 className="flex-1 accent-blue-600"
               />
-              <span className="text-sm text-white w-12 text-right">{volume}db</span>
+              <span className="text-xs md:text-sm text-white w-10 md:w-12 text-right">{volume}db</span>
             </div>
           </div>
         </div>
