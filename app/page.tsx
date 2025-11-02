@@ -92,33 +92,33 @@ export default function Home() {
         {/* Scrollable Content Area */}
         <div className="flex-1 overflow-y-auto">
           <div className="max-w-7xl mx-auto p-[0.5rem] space-y-2">
-            {/* Mode Info Card */}
-            <div className="bg-gray-800 rounded-lg border border-gray-700 p-[0.5rem]">
-              <div className="grid md:grid-cols-2 gap-6">
+            {/* Mode Info Card - Compact on mobile */}
+            <div className="bg-gray-800 rounded-lg border border-gray-700 p-2 md:p-[0.5rem]">
+              <div className="grid md:grid-cols-2 gap-3 md:gap-6">
                 <div>
-                  <h2 className="text-lg font-semibold mb-3 text-white">About This Mode</h2>
-                  <p className="text-gray-300 text-sm leading-relaxed mb-4">
+                  <h2 className="text-base md:text-lg font-semibold mb-2 md:mb-3 text-white">About This Mode</h2>
+                  <p className="text-gray-300 text-xs md:text-sm leading-relaxed mb-2 md:mb-4">
                     {mode.description}
                   </p>
-                  <div className="space-y-2 text-sm">
+                  <div className="space-y-1 md:space-y-2 text-xs md:text-sm">
                     <div>
                       <span className="text-gray-400">Mood:</span>
                       <span className="text-white ml-2">{mode.mood}</span>
                     </div>
-                    <div>
+                    <div className="hidden md:block">
                       <span className="text-gray-400">Interval Formula:</span>
                       <span className="text-white ml-2 font-mono">{mode.formula}</span>
                     </div>
                     <div>
-                      <span className="text-gray-400">Brightness Level:</span>
+                      <span className="text-gray-400">Brightness:</span>
                       <span className="text-white ml-2">{mode.brightness}/7</span>
                     </div>
                   </div>
                 </div>
 
                 <div>
-                  <h3 className="text-lg font-semibold mb-3 text-white">Scale Degrees</h3>
-                  <div className="flex flex-wrap gap-2">
+                  <h3 className="text-base md:text-lg font-semibold mb-2 md:mb-3 text-white">Scale Degrees</h3>
+                  <div className="flex flex-wrap gap-1.5 md:gap-2">
                     {mode.intervals.map((interval, idx) => {
                       const degree = idx + 1;
                       const isCharacteristic = mode.characteristicNotes.includes(degree as any);
@@ -146,7 +146,7 @@ export default function Home() {
                         <div
                           key={idx}
                           className={`
-                            px-3 py-2 rounded-lg border text-center min-w-[60px]
+                            px-2 md:px-3 py-1.5 md:py-2 rounded-lg border text-center min-w-[50px] md:min-w-[60px]
                             ${isCharacteristic
                               ? 'bg-purple-500/30 border-purple-500 text-purple-200 font-bold'
                               : idx === 0
@@ -155,11 +155,11 @@ export default function Home() {
                             }
                           `}
                         >
-                          <div className="text-xs opacity-75">
+                          <div className="text-xs opacity-75 hidden md:block">
                             {idx === 0 ? 'Root' : `Degree ${degree}`}
                           </div>
-                          <div className="text-lg font-semibold">{degreeName}</div>
-                          <div className="text-xs opacity-75">
+                          <div className="text-base md:text-lg font-semibold">{degreeName}</div>
+                          <div className="text-xs opacity-75 hidden md:block">
                             {interval === 0 ? 'P1' : `+${interval}`}
                           </div>
                         </div>
@@ -167,7 +167,7 @@ export default function Home() {
                     })}
                   </div>
                   {mode.characteristicNotes.length > 0 && (
-                    <p className="text-xs text-purple-300 mt-3">
+                    <p className="text-xs text-purple-300 mt-2 md:mt-3 hidden md:block">
                       Purple indicates characteristic notes that define this mode's unique sound
                     </p>
                   )}
@@ -179,8 +179,17 @@ export default function Home() {
             <div className="bg-gray-800 rounded-lg border border-gray-700 p-[0.5rem] piano-keyboard">
               <h2 className="text-lg font-semibold mb-4 text-white">Interactive Keyboard</h2>
               <p className="text-sm text-gray-400 mb-4">
-                Click on the keys to hear individual notes. Scale notes are highlighted in blue,
-                the root note in red, and characteristic notes in purple.
+                {isMobile ? (
+                  <>
+                    Tap the keys to hear individual notes. <strong className="text-gray-300">Swipe left/right to see more keys.</strong> Scale notes are highlighted in blue,
+                    the root note in red, and characteristic notes in purple.
+                  </>
+                ) : (
+                  <>
+                    Click on the keys to hear individual notes. Scale notes are highlighted in blue,
+                    the root note in red, and characteristic notes in purple.
+                  </>
+                )}
               </p>
               <PianoKeyboard startOctave={3} numOctaves={2} />
             </div>
