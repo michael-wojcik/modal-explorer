@@ -15,6 +15,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Modal Explorer - Interactive Music Theory Tool",
   description: "Explore the seven diatonic modes with an interactive keyboard, audio playback, and comprehensive music theory insights. Built with Next.js and Tone.js.",
+  manifest: "/manifest.json",
   viewport: {
     width: "device-width",
     initialScale: 1,
