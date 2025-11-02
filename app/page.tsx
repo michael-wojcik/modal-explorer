@@ -14,6 +14,7 @@ import { OnboardingTour } from '@/components/OnboardingTour';
 import { VisualFeedbackOverlay } from '@/components/VisualFeedbackOverlay';
 import { NoteTrails } from '@/components/NoteTrails';
 import { SustainPedalEffect } from '@/components/SustainPedalEffect';
+import { SwipeHint } from '@/components/SwipeHint';
 import { useStore } from '@/lib/store';
 import { getMode } from '@/lib/modes';
 import { useIsMobile } from '@/hooks/useIsMobile';
@@ -188,8 +189,7 @@ export default function Home() {
               <p className="text-sm text-gray-400 mb-4">
                 {isMobile ? (
                   <>
-                    Tap the keys to hear individual notes. <strong className="text-gray-300">Swipe left/right to see more keys.</strong> Scale notes are highlighted in blue,
-                    the root note in red, and characteristic notes in purple.
+                    <strong className="text-gray-300">Tap keys</strong> to play notes. <strong className="text-gray-300">Scroll left/right</strong> to see more keys. <strong className="text-gray-300">Swipe up/down</strong> to change octaves. Scale notes are blue, root note is red, characteristic notes are purple.
                   </>
                 ) : (
                   <>
@@ -265,6 +265,9 @@ export default function Home() {
 
       {/* Keyboard Shortcuts Hint - Desktop only */}
       {!isMobile && <KeyboardShortcutsHint />}
+
+      {/* Swipe Gesture Hint - Mobile only */}
+      <SwipeHint />
     </div>
   );
 }

@@ -38,16 +38,16 @@ export function PianoKeyboard({ startOctave = 3, numOctaves = 2 }: PianoKeyboard
   const isMobile = useIsMobile();
 
   // Swipe gesture handlers for octave navigation (mobile only)
-  const handleSwipeLeft = () => {
-    // Swipe left = increase octave (higher pitch)
+  const handleSwipeUp = () => {
+    // Swipe up = increase octave (higher pitch)
     if (currentOctave < 6) {
       setOctave(currentOctave + 1);
       hapticMedium();
     }
   };
 
-  const handleSwipeRight = () => {
-    // Swipe right = decrease octave (lower pitch)
+  const handleSwipeDown = () => {
+    // Swipe down = decrease octave (lower pitch)
     if (currentOctave > 2) {
       setOctave(currentOctave - 1);
       hapticMedium();
@@ -55,9 +55,9 @@ export function PianoKeyboard({ startOctave = 3, numOctaves = 2 }: PianoKeyboard
   };
 
   const { ref: swipeRef } = useSwipeGesture<HTMLDivElement>({
-    onSwipeLeft: isMobile ? handleSwipeLeft : undefined,
-    onSwipeRight: isMobile ? handleSwipeRight : undefined,
-    minSwipeDistance: 80,
+    onSwipeUp: isMobile ? handleSwipeUp : undefined,
+    onSwipeDown: isMobile ? handleSwipeDown : undefined,
+    minSwipeDistance: 60,
     preventScroll: false,
   });
 
