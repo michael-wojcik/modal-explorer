@@ -44,10 +44,10 @@ export function ChordDisplay() {
   };
 
   return (
-    <div className="bg-gray-800 rounded-lg border border-gray-700 p-[0.5rem]">
-      <div className="flex items-center justify-between mb-4">
+    <div className="bg-gray-800 rounded-lg border border-gray-700 p-3 md:p-4">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-4">
         <h3 className="text-lg font-semibold text-white">Diatonic Chords</h3>
-        <div className="flex gap-2 text-xs">
+        <div className="flex flex-wrap gap-2 text-xs">
           <div className="flex items-center gap-1">
             <div className="w-3 h-3 rounded bg-green-500/50" />
             <span className="text-gray-400">Tonic</span>
@@ -75,7 +75,7 @@ export function ChordDisplay() {
                 key={`${chord.root.name}-${index}`}
                 onClick={() => handlePlayChord(chord, index)}
                 className={`
-                  relative p-[0.5rem] rounded-lg border transition-all
+                  relative p-4 rounded-lg border transition-all min-h-[120px]
                   ${getFunctionColor(chord.function)}
                   ${(isPlaying || isInProgression) ? 'ring-2 ring-white scale-105' : 'hover:scale-102'}
                 `}
