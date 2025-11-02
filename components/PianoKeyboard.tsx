@@ -61,6 +61,15 @@ export function PianoKeyboard({ startOctave = 3, numOctaves = 2 }: PianoKeyboard
     preventScroll: false,
   });
 
+  // Center the piano keyboard horizontally on initial load
+  useEffect(() => {
+    if (swipeRef.current) {
+      const container = swipeRef.current;
+      const scrollCenter = (container.scrollWidth - container.clientWidth) / 2;
+      container.scrollLeft = scrollCenter;
+    }
+  }, [swipeRef, allNotes.length]); // Re-center when octave/notes change
+
   // Responsive key dimensions - larger on mobile for better touch targets
   const whiteKeyWidth = isMobile ? 50 : 40;
   const whiteKeyHeight = isMobile ? 180 : 160;
@@ -214,11 +223,11 @@ export function PianoKeyboard({ startOctave = 3, numOctaves = 2 }: PianoKeyboard
   const totalHeight = whiteKeyHeight;
 
   return (
-    <div ref={swipeRef} className="relative w-full overflow-x-auto py-8 -mx-4 px-4 scrollbar-hide">
+    <div ref={swipeRef} className="relative w-full overflow-x-auto py-8 -mx-4 px-4 scrollbar-hide flex justify-center">
       <svg
         width={totalWidth}
         height={totalHeight + 20}
-        className="drop-shadow-lg mx-auto"
+        className="drop-shadow-lg"
       >
         {/* White keys */}
         <g>
