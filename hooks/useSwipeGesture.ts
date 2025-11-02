@@ -6,7 +6,7 @@ interface SwipeGestureConfig {
   onSwipeUp?: () => void;
   onSwipeDown?: () => void;
   minSwipeDistance?: number;
-  preventScroll?: boolean;
+  preventScroll?: boolean | 'vertical' | 'horizontal';
 }
 
 interface TouchPosition {
@@ -58,10 +58,25 @@ export function useSwipeGesture<T extends HTMLElement = HTMLElement>(
       const deltaX = Math.abs(touch.clientX - touchStartRef.current.x);
       const deltaY = Math.abs(touch.clientY - touchStartRef.current.y);
 
-      // Prevent scroll if preventScroll is enabled and a swipe is detected
-      if (preventScroll && (deltaX > 10 || deltaY > 10)) {
-        e.preventDefault();
-        setIsSwiping(true);
+      // Determine if we should prevent default based on scroll direction
+      if (preventScroll) {
+        let shouldPrevent = false;
+
+        if (preventScroll === true) {
+          // Prevent all scrolling
+          shouldPrevent = deltaX > 10 || deltaY > 10;
+        } else if (preventScroll === 'vertical') {
+          // Only prevent vertical scrolling (allow horizontal)
+          shouldPrevent = deltaY > deltaX && deltaY > 10;
+        } else if (preventScroll === 'horizontal') {
+          // Only prevent horizontal scrolling (allow vertical)
+          shouldPrevent = deltaX > deltaY && deltaX > 10;
+        }
+
+        if (shouldPrevent) {
+          e.preventDefault();
+          setIsSwiping(true);
+        }
       }
     };
 

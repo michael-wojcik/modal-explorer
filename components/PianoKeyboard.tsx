@@ -58,7 +58,7 @@ export function PianoKeyboard({ startOctave = 3, numOctaves = 2 }: PianoKeyboard
     onSwipeUp: isMobile ? handleSwipeUp : undefined,
     onSwipeDown: isMobile ? handleSwipeDown : undefined,
     minSwipeDistance: 60,
-    preventScroll: true,
+    preventScroll: 'vertical',
   });
 
   // Responsive key dimensions - larger on mobile for better touch targets
