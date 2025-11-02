@@ -76,7 +76,7 @@ export default function Home() {
               </p>
             </div>
             <div className="text-center md:text-right">
-              <div className="text-xs md:text-sm text-gray-400">Current Mode</div>
+              <div className="text-xs md:text-sm text-gray-400 mb-2">Current Mode</div>
               <div
                 className="text-lg md:text-2xl font-bold px-3 py-1 rounded-lg inline-block"
                 style={{
