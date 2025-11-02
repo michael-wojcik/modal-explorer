@@ -66,18 +66,18 @@ export default function Home() {
 
       {/* Main Content */}
       <div className="flex-1 flex flex-col overflow-hidden">
-        {/* Header */}
-        <header className="bg-gray-900 border-b border-gray-700 px-8 py-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-2xl font-bold">Modal Explorer</h1>
-              <p className="text-sm text-gray-400 mt-1">
-                Interactive music theory tool for exploring diatonic modes
+        {/* Header - Responsive layout */}
+        <header className="bg-gray-900 border-b border-gray-700 px-4 md:px-8 py-3 md:py-4">
+          <div className={`flex flex-col md:flex-row md:items-center md:justify-between gap-3 md:gap-0 ${isMobile ? 'pl-12' : ''}`}>
+            <div className="text-center md:text-left">
+              <h1 className="text-xl md:text-2xl font-bold">Modal Explorer</h1>
+              <p className="text-xs md:text-sm text-gray-400 mt-1">
+                Interactive music theory tool
               </p>
             </div>
-            <div className="text-right">
-              <div className="text-sm text-gray-400">Current Mode</div>
-              <div className="text-2xl font-bold" style={{ color: mode.color }}>
+            <div className="text-center md:text-right">
+              <div className="text-xs md:text-sm text-gray-400">Current Mode</div>
+              <div className="text-lg md:text-2xl font-bold" style={{ color: mode.color }}>
                 {currentRoot} {mode.displayName}
               </div>
             </div>
