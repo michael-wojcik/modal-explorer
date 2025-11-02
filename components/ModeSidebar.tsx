@@ -55,7 +55,7 @@ export function ModeSidebar({ onClose }: ModeSidebarProps) {
           <h2 className="text-xl font-bold text-white">Diatonic Modes</h2>
         </div>
         <p className="text-sm text-gray-400">
-          Explore the seven modes of the major scale
+          Explore the seven modes<br />of the major scale
         </p>
       </div>
 
