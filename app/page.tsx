@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { Menu, X } from 'lucide-react';
 import { ModeSidebar } from '@/components/ModeSidebar';
 import { TransportControls } from '@/components/TransportControls';
 import { PianoKeyboard } from '@/components/PianoKeyboard';
@@ -15,11 +16,14 @@ import { NoteTrails } from '@/components/NoteTrails';
 import { SustainPedalEffect } from '@/components/SustainPedalEffect';
 import { useStore } from '@/lib/store';
 import { getMode } from '@/lib/modes';
+import { useIsMobile } from '@/hooks/useIsMobile';
 
 export default function Home() {
   const { currentMode, currentRoot } = useStore();
   const mode = getMode(currentMode);
   const [runTour, setRunTour] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const isMobile = useIsMobile();
 
   return (
     <div className="flex h-screen bg-gray-950 text-white overflow-hidden">
@@ -29,9 +33,35 @@ export default function Home() {
       {/* Onboarding Tour */}
       <OnboardingTour run={runTour} onComplete={() => setRunTour(false)} />
 
-      {/* Sidebar */}
-      <div className="mode-sidebar h-full">
-        <ModeSidebar />
+      {/* Mobile menu button */}
+      {isMobile && (
+        <button
+          onClick={() => setSidebarOpen(!sidebarOpen)}
+          className="fixed top-4 left-4 z-50 p-2 bg-gray-800 hover:bg-gray-700 rounded-lg shadow-lg transition-colors"
+          aria-label="Toggle menu"
+        >
+          {sidebarOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+        </button>
+      )}
+
+      {/* Backdrop overlay for mobile */}
+      {isMobile && sidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black/50 z-30 transition-opacity"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+
+      {/* Sidebar - drawer on mobile, fixed on desktop */}
+      <div
+        className={`
+          mode-sidebar h-full
+          fixed md:static inset-y-0 left-0 z-40
+          transform md:transform-none transition-transform duration-300 ease-in-out
+          ${sidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
+        `}
+      >
+        <ModeSidebar onClose={() => setSidebarOpen(false)} />
       </div>
 
       {/* Main Content */}

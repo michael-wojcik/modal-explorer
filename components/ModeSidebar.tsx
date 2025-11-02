@@ -4,11 +4,25 @@ import { motion } from 'framer-motion';
 import { useStore } from '@/lib/store';
 import { getModesBySortOrder } from '@/lib/modes';
 import { Music, Lightbulb, Hash, Sparkles } from 'lucide-react';
+import { useIsMobile } from '@/hooks/useIsMobile';
 import type { ModeName } from '@/lib/types';
 
-export function ModeSidebar() {
+interface ModeSidebarProps {
+  onClose?: () => void;
+}
+
+export function ModeSidebar({ onClose }: ModeSidebarProps) {
   const { currentMode, setMode, modeSortOrder, setModeSortOrder } = useStore();
   const modes = getModesBySortOrder(modeSortOrder);
+  const isMobile = useIsMobile();
+
+  const handleModeSelect = (mode: ModeName) => {
+    setMode(mode);
+    // Close drawer on mobile after selection
+    if (isMobile && onClose) {
+      onClose();
+    }
+  };
 
   // Map mode names to their keyboard shortcuts (Shift+1-7)
   const modeToShortcut: Record<ModeName, number> = {
@@ -89,7 +103,7 @@ export function ModeSidebar() {
           return (
             <motion.button
               key={mode.name}
-              onClick={() => setMode(mode.name as ModeName)}
+              onClick={() => handleModeSelect(mode.name as ModeName)}
               className={`
                 w-full text-left p-[0.5rem] rounded-lg border transition-all
                 ${isSelected
