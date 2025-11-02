@@ -224,11 +224,12 @@ export function PianoKeyboard({ startOctave = 3, numOctaves = 2 }: PianoKeyboard
 
   return (
     <div ref={swipeRef} className="relative w-full overflow-x-auto py-8 -mx-4 px-4 scrollbar-hide">
-      <svg
-        width={totalWidth}
-        height={totalHeight + 20}
-        className="drop-shadow-lg mx-auto block"
-      >
+      <div style={{ minWidth: totalWidth, width: totalWidth, margin: '0 auto' }}>
+        <svg
+          width={totalWidth}
+          height={totalHeight + 20}
+          className="drop-shadow-lg block"
+        >
         {/* White keys */}
         <g>
           {whiteKeys.map((note, index) => (
@@ -273,6 +274,7 @@ export function PianoKeyboard({ startOctave = 3, numOctaves = 2 }: PianoKeyboard
           ))}
         </g>
       </svg>
+      </div>
     </div>
   );
 }
