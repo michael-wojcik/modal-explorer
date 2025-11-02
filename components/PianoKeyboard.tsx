@@ -217,10 +217,13 @@ export function PianoKeyboard({ startOctave = 3, numOctaves = 2 }: PianoKeyboard
   useEffect(() => {
     if (swipeRef.current) {
       const container = swipeRef.current;
-      const scrollCenter = (container.scrollWidth - container.clientWidth) / 2;
-      container.scrollLeft = scrollCenter;
+      // Small delay to ensure SVG is fully rendered before calculating scroll position
+      setTimeout(() => {
+        const scrollCenter = (container.scrollWidth - container.clientWidth) / 2;
+        container.scrollLeft = scrollCenter;
+      }, 0);
     }
-  }, [allNotes.length]); // Re-center when octave/notes change
+  }, [allNotes.length, totalWidth]); // Re-center when octave/notes change or width changes
 
   return (
     <div ref={swipeRef} className="relative w-full overflow-x-auto py-8 -mx-4 px-4 scrollbar-hide">
