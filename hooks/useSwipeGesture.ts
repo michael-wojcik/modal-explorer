@@ -58,8 +58,8 @@ export function useSwipeGesture<T extends HTMLElement = HTMLElement>(
       const deltaX = Math.abs(touch.clientX - touchStartRef.current.x);
       const deltaY = Math.abs(touch.clientY - touchStartRef.current.y);
 
-      // If horizontal swipe is dominant, prevent vertical scroll
-      if (preventScroll && deltaX > deltaY && deltaX > 10) {
+      // Prevent scroll if preventScroll is enabled and a swipe is detected
+      if (preventScroll && (deltaX > 10 || deltaY > 10)) {
         e.preventDefault();
         setIsSwiping(true);
       }
