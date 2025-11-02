@@ -21,7 +21,7 @@ interface PianoKeyProps {
   onMouseLeave: () => void;
 }
 
-export function PianoKey({
+export const PianoKey = React.memo(function PianoKey({
   note,
   isBlack,
   isInScale,
@@ -197,4 +197,4 @@ export function PianoKey({
       )}
     </motion.g>
   );
-}
+});

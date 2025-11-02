@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useCallback } from 'react';
 import { PianoKey } from './PianoKey';
 import { useStore } from '@/lib/store';
 import { generateScale } from '@/lib/theory-engine';
@@ -9,7 +9,8 @@ import { getMode } from '@/lib/modes';
 import { getAudioEngine } from '@/lib/audio-engine';
 import { useKeyboardPiano } from '@/hooks/useKeyboardPiano';
 import { useIsMobile } from '@/hooks/useIsMobile';
-import { hapticLight } from '@/lib/haptics';
+import { useSwipeGesture } from '@/hooks/useSwipeGesture';
+import { hapticLight, hapticMedium } from '@/lib/haptics';
 import type { Note } from '@/lib/types';
 
 interface PianoKeyboardProps {
@@ -21,11 +22,13 @@ export function PianoKeyboard({ startOctave = 3, numOctaves = 2 }: PianoKeyboard
   const {
     currentMode,
     currentRoot,
+    currentOctave,
     activeNotes,
     hoveredNote,
     addActiveNote,
     removeActiveNote,
     setHoveredNote,
+    setOctave,
     keyboardEnabled,
     keyboardLabelsOnPiano,
     addNoteTrail,
@@ -33,6 +36,30 @@ export function PianoKeyboard({ startOctave = 3, numOctaves = 2 }: PianoKeyboard
 
   const audioEngine = getAudioEngine();
   const isMobile = useIsMobile();
+
+  // Swipe gesture handlers for octave navigation (mobile only)
+  const handleSwipeUp = () => {
+    // Swipe up = increase octave (higher pitch)
+    if (currentOctave < 6) {
+      setOctave(currentOctave + 1);
+      hapticMedium();
+    }
+  };
+
+  const handleSwipeDown = () => {
+    // Swipe down = decrease octave (lower pitch)
+    if (currentOctave > 2) {
+      setOctave(currentOctave - 1);
+      hapticMedium();
+    }
+  };
+
+  const { ref: swipeRef } = useSwipeGesture<HTMLDivElement>({
+    onSwipeUp: isMobile ? handleSwipeUp : undefined,
+    onSwipeDown: isMobile ? handleSwipeDown : undefined,
+    minSwipeDistance: 60,
+    preventScroll: 'vertical',
+  });
 
   // Responsive key dimensions - larger on mobile for better touch targets
   const whiteKeyWidth = isMobile ? 50 : 40;
@@ -62,29 +89,32 @@ export function PianoKeyboard({ startOctave = 3, numOctaves = 2 }: PianoKeyboard
   // Get current mode data
   const mode = getMode(currentMode);
 
+  // Use currentOctave from store instead of startOctave prop for swipe navigation
+  const displayOctave = currentOctave - 1; // Display one octave below and one above current
+
   // Generate scale notes for highlighting
   const scaleNotes = useMemo(() => {
     const scales: Note[] = [];
     for (let i = 0; i < numOctaves; i++) {
-      const scale = generateScale(currentRoot, currentMode, startOctave + i);
+      const scale = generateScale(currentRoot, currentMode, displayOctave + i);
       scales.push(...scale.notes);
     }
     // Add root note of next octave
-    scales.push(createNote(currentRoot, startOctave + numOctaves));
+    scales.push(createNote(currentRoot, displayOctave + numOctaves));
     return scales;
-  }, [currentRoot, currentMode, startOctave, numOctaves]);
+  }, [currentRoot, currentMode, displayOctave, numOctaves]);
 
   // Generate all chromatic notes across octaves
   const allNotes = useMemo(() => {
     const notes: Note[] = [];
-    for (let octave = startOctave; octave < startOctave + numOctaves; octave++) {
+    for (let octave = displayOctave; octave < displayOctave + numOctaves; octave++) {
       const chromaticScale = getChromaticScale('C', octave);
       notes.push(...chromaticScale);
     }
     // Add final C for completion
-    notes.push(createNote('C', startOctave + numOctaves));
+    notes.push(createNote('C', displayOctave + numOctaves));
     return notes;
-  }, [startOctave, numOctaves]);
+  }, [displayOctave, numOctaves]);
 
   // Get characteristic notes (scale degrees that define the mode)
   const characteristicMidiNumbers = useMemo(() => {
@@ -123,7 +153,7 @@ export function PianoKeyboard({ startOctave = 3, numOctaves = 2 }: PianoKeyboard
   };
 
   // Handle note click (supports both mouse and touch via pointer events)
-  const handleNoteClick = (note: Note, event?: React.PointerEvent) => {
+  const handleNoteClick = useCallback((note: Note, event?: React.PointerEvent) => {
     if (!audioEngine.initialized) return;
 
     // Haptic feedback for touch interactions
@@ -145,7 +175,7 @@ export function PianoKeyboard({ startOctave = 3, numOctaves = 2 }: PianoKeyboard
     setTimeout(() => {
       removeActiveNote(note.midiNumber);
     }, 500);
-  };
+  }, [audioEngine, addActiveNote, removeActiveNote, addNoteTrail]);
 
   // Get scale degree label for a piano note (if in current scale)
   const getKeyboardLabel = (note: Note): string | null => {
@@ -183,12 +213,22 @@ export function PianoKeyboard({ startOctave = 3, numOctaves = 2 }: PianoKeyboard
   const totalWidth = whiteKeys.length * whiteKeyWidth;
   const totalHeight = whiteKeyHeight;
 
+  // Calculate padding to center the keyboard
+  const containerPadding = isMobile ? `max(1rem, calc(50vw - ${totalWidth / 2}px))` : '1rem';
+
   return (
-    <div className="relative w-full overflow-x-auto py-8 -mx-4 px-4 scrollbar-hide">
+    <div
+      ref={swipeRef}
+      className="relative w-full overflow-x-auto py-8 scrollbar-hide"
+      style={{
+        paddingLeft: containerPadding,
+        paddingRight: containerPadding
+      }}
+    >
       <svg
         width={totalWidth}
         height={totalHeight + 20}
-        className="drop-shadow-lg mx-auto"
+        className="drop-shadow-lg"
       >
         {/* White keys */}
         <g>
