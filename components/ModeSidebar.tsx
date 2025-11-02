@@ -49,7 +49,7 @@ export function ModeSidebar({ onClose }: ModeSidebarProps) {
       )}
 
       {/* Header */}
-      <div className="p-[0.5rem] border-b border-gray-700 flex-shrink-0">
+      <div className={`p-3 border-b border-gray-700 flex-shrink-0 ${isMobile ? 'pr-12' : ''}`}>
         <div className="flex items-center gap-3 mb-2">
           <Music className="w-6 h-6 text-blue-400" />
           <h2 className="text-xl font-bold text-white">Diatonic Modes</h2>
