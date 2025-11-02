@@ -88,14 +88,14 @@ export function TransportControls() {
   };
 
   return (
-    <div className="bg-gray-800 border-b border-gray-700 p-[0.5rem]">
+    <div className="bg-gray-800 border-b border-gray-700 p-2 md:p-4">
       <div className="max-w-7xl mx-auto">
-        <div className="flex flex-wrap items-center gap-4">
-          {/* Playback Controls */}
-          <div className="flex items-center gap-2">
+        <div className="flex flex-col md:flex-row md:flex-wrap items-stretch md:items-center gap-2 md:gap-4">
+          {/* Playback Controls - Full width on mobile, auto on desktop */}
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full md:w-auto">
             <button
               onClick={isPlaying ? handleStop : handlePlayScale}
-              className="flex items-center gap-2.5 pl-[0.75rem] pr-[1rem] py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-base min-h-[48px]"
+              className="flex-1 sm:flex-initial flex items-center justify-center gap-2.5 px-4 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-base min-h-[48px]"
               disabled={!audioEngine.initialized && !isPlaying}
             >
               {isPlaying ? (
@@ -113,7 +113,7 @@ export function TransportControls() {
 
             <button
               onClick={handlePlayChords}
-              className="flex items-center gap-2.5 pl-[0.75rem] pr-[1rem] py-3 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-base min-h-[48px]"
+              className="flex-1 sm:flex-initial flex items-center justify-center gap-2.5 px-4 py-3 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-base min-h-[48px]"
               disabled={isPlaying || !audioEngine.initialized}
             >
               <Music2 className="w-5 h-5" />
@@ -122,7 +122,7 @@ export function TransportControls() {
 
             <motion.button
               onClick={toggleKeyboard}
-              className={`keyboard-toggle-button flex items-center gap-2.5 pl-[0.5rem] pr-[0.75rem] py-2.5 rounded-lg transition-colors relative text-sm min-h-[44px] ${
+              className={`flex-1 sm:flex-initial keyboard-toggle-button flex items-center justify-center gap-2.5 px-4 py-2.5 rounded-lg transition-colors relative text-sm min-h-[44px] ${
                 keyboardEnabled
                   ? 'bg-green-600 hover:bg-green-700 text-white'
                   : 'bg-gray-700 hover:bg-gray-600 text-gray-300'
@@ -146,79 +146,91 @@ export function TransportControls() {
             </motion.button>
           </div>
 
-          {/* Direction Selector */}
-          <div className="flex items-center gap-2">
-            <label className="text-sm text-gray-400">Direction:</label>
-            <select
-              value={playDirection}
-              onChange={(e) => setPlayDirection(e.target.value as any)}
-              className="px-4 py-2 bg-gray-700 text-white rounded-lg border border-gray-600 focus:border-blue-500 focus:outline-none text-sm"
-            >
-              <option value="ascending">Ascending</option>
-              <option value="descending">Descending</option>
-              <option value="both">Both</option>
-            </select>
+          {/* Selectors Group - Grid on mobile, flex on desktop */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 md:flex gap-2 md:gap-4 w-full md:w-auto">
+            {/* Direction Selector */}
+            <div className="flex flex-col gap-1">
+              <label className="text-xs text-gray-400">Direction</label>
+              <select
+                value={playDirection}
+                onChange={(e) => setPlayDirection(e.target.value as any)}
+                className="px-3 py-2 bg-gray-700 text-white rounded-lg border border-gray-600 focus:border-blue-500 focus:outline-none text-sm min-h-[44px]"
+              >
+                <option value="ascending">Ascending</option>
+                <option value="descending">Descending</option>
+                <option value="both">Both</option>
+              </select>
+            </div>
+
+            {/* Key Selector */}
+            <div className="flex flex-col gap-1">
+              <label className="text-xs text-gray-400">Key</label>
+              <select
+                value={currentRoot}
+                onChange={(e) => setRoot(e.target.value as any)}
+                className="px-3 py-2 bg-gray-700 text-white rounded-lg border border-gray-600 focus:border-blue-500 focus:outline-none text-sm min-h-[44px]"
+              >
+                {NOTE_NAMES.map(note => (
+                  <option key={note} value={note}>{note}</option>
+                ))}
+              </select>
+            </div>
+
+            {/* Octave Selector */}
+            <div className="flex flex-col gap-1">
+              <label className="text-xs text-gray-400">Octave</label>
+              <select
+                value={currentOctave}
+                onChange={(e) => setOctave(parseInt(e.target.value))}
+                className="px-3 py-2 bg-gray-700 text-white rounded-lg border border-gray-600 focus:border-blue-500 focus:outline-none text-sm min-h-[44px]"
+              >
+                {[2, 3, 4, 5, 6].map(oct => (
+                  <option key={oct} value={oct}>{oct}</option>
+                ))}
+              </select>
+            </div>
+
+            {/* Tempo Slider */}
+            <div className="flex flex-col gap-1 col-span-2 sm:col-span-1 md:min-w-[200px]">
+              <label className="text-xs text-gray-400 flex items-center gap-1">
+                <RotateCcw className="w-3 h-3" />
+                BPM
+              </label>
+              <div className="flex items-center gap-2">
+                <input
+                  type="range"
+                  min="40"
+                  max="200"
+                  value={tempo}
+                  onChange={(e) => setTempo(parseInt(e.target.value))}
+                  className="flex-1 accent-blue-600"
+                />
+                <span className="text-sm text-white w-12 text-right">{tempo}</span>
+              </div>
+            </div>
           </div>
 
-          {/* Key Selector */}
-          <div className="flex items-center gap-2">
-            <label className="text-sm text-gray-400">Key:</label>
-            <select
-              value={currentRoot}
-              onChange={(e) => setRoot(e.target.value as any)}
-              className="px-4 py-2 bg-gray-700 text-white rounded-lg border border-gray-600 focus:border-blue-500 focus:outline-none text-sm"
-            >
-              {NOTE_NAMES.map(note => (
-                <option key={note} value={note}>{note}</option>
-              ))}
-            </select>
-          </div>
-
-          {/* Octave Selector */}
-          <div className="flex items-center gap-2">
-            <label className="text-sm text-gray-400">Octave:</label>
-            <select
-              value={currentOctave}
-              onChange={(e) => setOctave(parseInt(e.target.value))}
-              className="px-4 py-2 bg-gray-700 text-white rounded-lg border border-gray-600 focus:border-blue-500 focus:outline-none text-sm"
-            >
-              {[2, 3, 4, 5, 6].map(oct => (
-                <option key={oct} value={oct}>{oct}</option>
-              ))}
-            </select>
-          </div>
-
-          {/* Tempo Slider */}
-          <div className="flex items-center gap-2 min-w-[200px]">
-            <RotateCcw className="w-4 h-4 text-gray-400" />
-            <label className="text-sm text-gray-400">BPM:</label>
-            <input
-              type="range"
-              min="40"
-              max="200"
-              value={tempo}
-              onChange={(e) => setTempo(parseInt(e.target.value))}
-              className="flex-1 accent-blue-600"
-            />
-            <span className="text-sm text-white w-12 text-right">{tempo}</span>
-          </div>
-
-          {/* Volume Slider */}
-          <div className="flex items-center gap-2 min-w-[150px]">
-            <Volume2 className="w-4 h-4 text-gray-400" />
-            <input
-              type="range"
-              min="-40"
-              max="0"
-              value={volume}
-              onChange={(e) => {
-                const newVolume = parseInt(e.target.value);
-                setVolume(newVolume);
-                audioEngine.updateSettings({ volume: newVolume });
-              }}
-              className="flex-1 accent-blue-600"
-            />
-            <span className="text-sm text-white w-12 text-right">{volume}db</span>
+          {/* Volume Slider - Full width on mobile */}
+          <div className="flex flex-col gap-1 w-full md:min-w-[150px] md:w-auto">
+            <label className="text-xs text-gray-400 flex items-center gap-1">
+              <Volume2 className="w-3 h-3" />
+              Volume
+            </label>
+            <div className="flex items-center gap-2">
+              <input
+                type="range"
+                min="-40"
+                max="0"
+                value={volume}
+                onChange={(e) => {
+                  const newVolume = parseInt(e.target.value);
+                  setVolume(newVolume);
+                  audioEngine.updateSettings({ volume: newVolume });
+                }}
+                className="flex-1 accent-blue-600"
+              />
+              <span className="text-sm text-white w-12 text-right">{volume}db</span>
+            </div>
           </div>
         </div>
       </div>
