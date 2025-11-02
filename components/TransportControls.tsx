@@ -4,11 +4,13 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Play, Pause, RotateCcw, Music2, Volume2, Keyboard } from 'lucide-react';
 import { useStore } from '@/lib/store';
+import { useIsMobile } from '@/hooks/useIsMobile';
 import { NOTE_NAMES } from '@/lib/notes';
 import { generateScale, generateDiatonicChords } from '@/lib/theory-engine';
 import { getAudioEngine } from '@/lib/audio-engine';
 
 export function TransportControls() {
+  const isMobile = useIsMobile();
   const {
     currentMode,
     currentRoot,
@@ -120,30 +122,33 @@ export function TransportControls() {
               Play Chords
             </button>
 
-            <motion.button
-              onClick={toggleKeyboard}
-              className={`flex-1 sm:flex-initial keyboard-toggle-button flex items-center justify-center gap-2.5 px-4 py-2.5 rounded-lg transition-colors relative text-sm min-h-[44px] ${
-                keyboardEnabled
-                  ? 'bg-green-600 hover:bg-green-700 text-white'
-                  : 'bg-gray-700 hover:bg-gray-600 text-gray-300'
-              }`}
-              title={keyboardEnabled ? 'Disable Keyboard (`)' : 'Enable Keyboard (`)'}
-              animate={!keyboardEnabled ? {
-                boxShadow: [
-                  '0 0 0 0 rgba(147, 51, 234, 0)',
-                  '0 0 0 4px rgba(147, 51, 234, 0.3)',
-                  '0 0 0 0 rgba(147, 51, 234, 0)',
-                ],
-              } : {}}
-              transition={{
-                duration: 2,
-                repeat: Infinity,
-                ease: "easeInOut",
-              }}
-            >
-              <Keyboard className="w-5 h-5" />
-              {keyboardEnabled ? 'Keyboard (`)'  : 'Keyboard (`)'}
-            </motion.button>
+            {/* Keyboard toggle - Desktop only (no physical keyboard on mobile) */}
+            {!isMobile && (
+              <motion.button
+                onClick={toggleKeyboard}
+                className={`flex-1 sm:flex-initial keyboard-toggle-button flex items-center justify-center gap-2.5 px-4 py-2.5 rounded-lg transition-colors relative text-sm min-h-[44px] ${
+                  keyboardEnabled
+                    ? 'bg-green-600 hover:bg-green-700 text-white'
+                    : 'bg-gray-700 hover:bg-gray-600 text-gray-300'
+                }`}
+                title={keyboardEnabled ? 'Disable Keyboard (`)' : 'Enable Keyboard (`)'}
+                animate={!keyboardEnabled ? {
+                  boxShadow: [
+                    '0 0 0 0 rgba(147, 51, 234, 0)',
+                    '0 0 0 4px rgba(147, 51, 234, 0.3)',
+                    '0 0 0 0 rgba(147, 51, 234, 0)',
+                  ],
+                } : {}}
+                transition={{
+                  duration: 2,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                }}
+              >
+                <Keyboard className="w-5 h-5" />
+                {keyboardEnabled ? 'Keyboard (`)'  : 'Keyboard (`)'}
+              </motion.button>
+            )}
           </div>
 
           {/* Selectors Group - Grid on mobile, flex on desktop */}
