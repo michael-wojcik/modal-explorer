@@ -68,7 +68,7 @@ export default function Home() {
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Header - Responsive layout */}
         <header className="bg-gray-900 border-b border-gray-700 px-4 md:px-8 py-3 md:py-4">
-          <div className={`flex flex-col md:flex-row md:items-center md:justify-between gap-3 md:gap-0 ${isMobile ? 'pl-12' : ''}`}>
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 md:gap-0">
             <div className="text-center md:text-left">
               <h1 className="text-xl md:text-2xl font-bold">Modal Explorer</h1>
               <p className="text-xs md:text-sm text-gray-400 mt-1">
