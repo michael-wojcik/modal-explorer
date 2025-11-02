@@ -197,16 +197,16 @@ export default function Home() {
             {/* Chord Display */}
             <ChordDisplay />
 
-            {/* Tips & Tricks */}
-            <div className="bg-gray-800 rounded-lg border border-gray-700 p-[0.5rem]">
-              <h2 className="text-lg font-semibold mb-4 text-white">How to Use</h2>
-              <div className="grid md:grid-cols-3 gap-4 text-sm text-gray-300">
+            {/* Tips & Tricks - Compact on mobile */}
+            <div className="bg-gray-800 rounded-lg border border-gray-700 p-2 md:p-[0.5rem]">
+              <h2 className="text-base md:text-lg font-semibold mb-3 md:mb-4 text-white">How to Use</h2>
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4 text-xs md:text-sm text-gray-300">
                 <div>
                   <h3 className="font-semibold text-white mb-2">Getting Started</h3>
                   <ul className="space-y-1 list-disc list-inside">
-                    <li>Select a mode from the left sidebar</li>
-                    <li>Choose a root note and octave from the controls</li>
-                    <li>Click "Play Scale" to hear the mode</li>
+                    <li>{isMobile ? 'Tap' : 'Select'} a mode from the {isMobile ? 'menu' : 'left sidebar'}</li>
+                    <li>Choose a root note and octave</li>
+                    <li>{isMobile ? 'Tap' : 'Click'} "Play Scale" to hear the mode</li>
                     <li>Experiment with different keys and modes</li>
                   </ul>
                 </div>
@@ -219,7 +219,8 @@ export default function Home() {
                     <li>Try comparing parallel modes (same root)</li>
                   </ul>
                 </div>
-                <div>
+                {/* Desktop only - Keyboard Controls */}
+                <div className="hidden lg:block">
                   <h3 className="font-semibold text-white mb-2">Keyboard Controls</h3>
                   <ul className="space-y-1 list-disc list-inside">
                     <li>Press <kbd className="px-2 py-0.5 bg-gray-700 rounded text-xs">` </kbd> to enable keyboard mode</li>
