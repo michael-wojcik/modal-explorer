@@ -41,7 +41,7 @@ export function ModeSidebar({ onClose }: ModeSidebarProps) {
       {isMobile && onClose && (
         <button
           onClick={onClose}
-          className="absolute top-3 right-3 z-10 p-2 bg-gray-800 hover:bg-gray-700 rounded-lg transition-colors"
+          className="absolute top-2 right-2 z-10 p-2 bg-gray-800 hover:bg-gray-700 rounded-lg transition-colors"
           aria-label="Close menu"
         >
           <X className="w-5 h-5" />
