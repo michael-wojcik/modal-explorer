@@ -4,6 +4,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import type { Note } from '@/lib/types';
 import { formatNote } from '@/lib/notes';
+import { useIsMobile } from '@/hooks/useIsMobile';
 
 interface PianoKeyProps {
   note: Note;
@@ -60,11 +61,12 @@ export function PianoKey({
     return '#374151';
   };
 
-  // Dimensions
-  const whiteKeyWidth = 40;
-  const whiteKeyHeight = 160;
-  const blackKeyWidth = 24;
-  const blackKeyHeight = 100;
+  // Responsive dimensions - larger keys on mobile for better touch targets
+  const isMobile = useIsMobile();
+  const whiteKeyWidth = isMobile ? 50 : 40;
+  const whiteKeyHeight = isMobile ? 180 : 160;
+  const blackKeyWidth = isMobile ? 30 : 24;
+  const blackKeyHeight = isMobile ? 110 : 100;
 
   const width = isBlack ? blackKeyWidth : whiteKeyWidth;
   const height = isBlack ? blackKeyHeight : whiteKeyHeight;

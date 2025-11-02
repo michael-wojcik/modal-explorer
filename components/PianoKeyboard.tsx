@@ -8,6 +8,7 @@ import { getChromaticScale, createNote } from '@/lib/notes';
 import { getMode } from '@/lib/modes';
 import { getAudioEngine } from '@/lib/audio-engine';
 import { useKeyboardPiano } from '@/hooks/useKeyboardPiano';
+import { useIsMobile } from '@/hooks/useIsMobile';
 import type { Note } from '@/lib/types';
 
 interface PianoKeyboardProps {
@@ -30,6 +31,12 @@ export function PianoKeyboard({ startOctave = 3, numOctaves = 2 }: PianoKeyboard
   } = useStore();
 
   const audioEngine = getAudioEngine();
+  const isMobile = useIsMobile();
+
+  // Responsive key dimensions - larger on mobile for better touch targets
+  const whiteKeyWidth = isMobile ? 50 : 40;
+  const whiteKeyHeight = isMobile ? 180 : 160;
+  const blackKeyWidth = isMobile ? 30 : 24;
 
   // Initialize keyboard controls
   useKeyboardPiano();
@@ -158,9 +165,6 @@ export function PianoKeyboard({ startOctave = 3, numOctaves = 2 }: PianoKeyboard
 
   // Calculate black key positions
   const getBlackKeyX = (note: Note): number => {
-    const whiteKeyWidth = 40;
-    const blackKeyWidth = 24;
-
     // Find the previous white key
     const whiteKeysBefore = whiteKeys.filter(wk => wk.midiNumber < note.midiNumber).length;
 
@@ -170,8 +174,8 @@ export function PianoKeyboard({ startOctave = 3, numOctaves = 2 }: PianoKeyboard
     return whiteKeysBefore * whiteKeyWidth + blackKeyOffset;
   };
 
-  const totalWidth = whiteKeys.length * 40;
-  const totalHeight = 160;
+  const totalWidth = whiteKeys.length * whiteKeyWidth;
+  const totalHeight = whiteKeyHeight;
 
   return (
     <div className="relative w-full overflow-x-auto py-8 -mx-4 px-4 scrollbar-hide">
@@ -183,7 +187,7 @@ export function PianoKeyboard({ startOctave = 3, numOctaves = 2 }: PianoKeyboard
         {/* White keys */}
         <g>
           {whiteKeys.map((note, index) => (
-            <g key={note.midiNumber} transform={`translate(${index * 40}, 0)`}>
+            <g key={note.midiNumber} transform={`translate(${index * whiteKeyWidth}, 0)`}>
               <PianoKey
                 note={note}
                 isBlack={false}
