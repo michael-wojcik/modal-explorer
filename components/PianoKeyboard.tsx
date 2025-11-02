@@ -114,13 +114,13 @@ export function PianoKeyboard({ startOctave = 3, numOctaves = 2 }: PianoKeyboard
     return characteristicMidiNumbers.has(note.midiNumber) && isNoteInScale(note);
   };
 
-  // Handle note click
-  const handleNoteClick = (note: Note, event?: React.MouseEvent) => {
+  // Handle note click (supports both mouse and touch via pointer events)
+  const handleNoteClick = (note: Note, event?: React.PointerEvent) => {
     if (!audioEngine.initialized) return;
 
     addActiveNote(note.midiNumber);
 
-    // Track mouse position for animation
+    // Track pointer position for animation
     const sourcePosition = event
       ? { x: event.clientX, y: event.clientY }
       : undefined;

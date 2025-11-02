@@ -15,7 +15,7 @@ interface PianoKeyProps {
   isCharacteristic: boolean;
   scaleColor: string;
   keyboardLabel?: string | null;
-  onClick: (e: React.MouseEvent) => void;
+  onClick: (e: React.PointerEvent) => void;
   onMouseEnter: () => void;
   onMouseLeave: () => void;
 }
@@ -69,12 +69,26 @@ export function PianoKey({
   const width = isBlack ? blackKeyWidth : whiteKeyWidth;
   const height = isBlack ? blackKeyHeight : whiteKeyHeight;
 
+  // Touch event handlers
+  const handlePointerDown = (e: React.PointerEvent) => {
+    e.preventDefault();
+    onClick(e);
+  };
+
+  const handlePointerEnter = (e: React.PointerEvent) => {
+    // On touch devices, only trigger if pointer is pressed (dragging)
+    if (e.pointerType === 'touch' && e.pressure === 0) {
+      return;
+    }
+    onMouseEnter();
+  };
+
   return (
     <motion.g
-      onClick={onClick}
-      onMouseEnter={onMouseEnter}
-      onMouseLeave={onMouseLeave}
-      style={{ cursor: 'pointer' }}
+      onPointerDown={handlePointerDown}
+      onPointerEnter={handlePointerEnter}
+      onPointerLeave={onMouseLeave}
+      style={{ cursor: 'pointer', touchAction: 'none' }}
       whileHover={{ y: isBlack ? 1 : 2 }}
       whileTap={{ scale: 0.98 }}
       animate={isActive ? { y: [0, -2, 0] } : {}}
