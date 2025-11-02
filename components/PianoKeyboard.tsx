@@ -9,6 +9,7 @@ import { getMode } from '@/lib/modes';
 import { getAudioEngine } from '@/lib/audio-engine';
 import { useKeyboardPiano } from '@/hooks/useKeyboardPiano';
 import { useIsMobile } from '@/hooks/useIsMobile';
+import { hapticLight } from '@/lib/haptics';
 import type { Note } from '@/lib/types';
 
 interface PianoKeyboardProps {
@@ -124,6 +125,11 @@ export function PianoKeyboard({ startOctave = 3, numOctaves = 2 }: PianoKeyboard
   // Handle note click (supports both mouse and touch via pointer events)
   const handleNoteClick = (note: Note, event?: React.PointerEvent) => {
     if (!audioEngine.initialized) return;
+
+    // Haptic feedback for touch interactions
+    if (event?.pointerType === 'touch') {
+      hapticLight();
+    }
 
     addActiveNote(note.midiNumber);
 

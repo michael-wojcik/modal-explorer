@@ -6,6 +6,7 @@ import { Play } from 'lucide-react';
 import { useStore } from '@/lib/store';
 import { generateDiatonicChords, formatChordName } from '@/lib/theory-engine';
 import { getAudioEngine } from '@/lib/audio-engine';
+import { hapticMedium } from '@/lib/haptics';
 import type { ChordInstance } from '@/lib/types';
 
 export function ChordDisplay() {
@@ -21,6 +22,9 @@ export function ChordDisplay() {
     if (!audioEngine.initialized) {
       await audioEngine.initialize();
     }
+
+    // Haptic feedback for chord play
+    hapticMedium();
 
     setPlayingChordIndex(index);
     audioEngine.playChord(chord.notes, '2n');
