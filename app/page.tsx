@@ -77,7 +77,14 @@ export default function Home() {
             </div>
             <div className="text-center md:text-right">
               <div className="text-xs md:text-sm text-gray-400">Current Mode</div>
-              <div className="text-lg md:text-2xl font-bold" style={{ color: mode.color }}>
+              <div
+                className="text-lg md:text-2xl font-bold px-3 py-1 rounded-lg inline-block"
+                style={{
+                  backgroundColor: mode.color,
+                  color: '#ffffff',
+                  textShadow: '0 1px 3px rgba(0, 0, 0, 0.8)'
+                }}
+              >
                 {currentRoot} {mode.displayName}
               </div>
             </div>
