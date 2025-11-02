@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useLayoutEffect, useMemo, useCallback } from 'react';
+import React, { useMemo, useCallback } from 'react';
 import { PianoKey } from './PianoKey';
 import { useStore } from '@/lib/store';
 import { generateScale } from '@/lib/theory-engine';
@@ -213,23 +213,23 @@ export function PianoKeyboard({ startOctave = 3, numOctaves = 2 }: PianoKeyboard
   const totalWidth = whiteKeys.length * whiteKeyWidth;
   const totalHeight = whiteKeyHeight;
 
-  // Center the piano keyboard horizontally on initial load
-  useLayoutEffect(() => {
-    if (swipeRef.current) {
-      const container = swipeRef.current;
-      const scrollCenter = (container.scrollWidth - container.clientWidth) / 2;
-      container.scrollLeft = scrollCenter;
-    }
-  }, [allNotes.length, totalWidth]); // Re-center when octave/notes change or width changes
+  // Calculate padding to center the keyboard
+  const containerPadding = isMobile ? `max(1rem, calc(50vw - ${totalWidth / 2}px))` : '1rem';
 
   return (
-    <div ref={swipeRef} className="relative w-full overflow-x-auto py-8 -mx-4 px-4 scrollbar-hide">
-      <div style={{ minWidth: totalWidth, width: totalWidth, margin: '0 auto' }}>
-        <svg
-          width={totalWidth}
-          height={totalHeight + 20}
-          className="drop-shadow-lg block"
-        >
+    <div
+      ref={swipeRef}
+      className="relative w-full overflow-x-auto py-8 scrollbar-hide"
+      style={{
+        paddingLeft: containerPadding,
+        paddingRight: containerPadding
+      }}
+    >
+      <svg
+        width={totalWidth}
+        height={totalHeight + 20}
+        className="drop-shadow-lg"
+      >
         {/* White keys */}
         <g>
           {whiteKeys.map((note, index) => (
@@ -274,7 +274,6 @@ export function PianoKeyboard({ startOctave = 3, numOctaves = 2 }: PianoKeyboard
           ))}
         </g>
       </svg>
-      </div>
     </div>
   );
 }
